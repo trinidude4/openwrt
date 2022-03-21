@@ -44,7 +44,9 @@ CMAKE_HOST_OPTIONS += \
 define Host/Install
 	rm -rf $(STAGING_DIR_HOST)/llvm-bpf*
 	$(Host/Install/Default)
-	ln -s $(LLVM_BPF_PREFIX) $(STAGING_DIR_HOST)/llvm-bpf
+	$(INSTALL_DIR) $(CMAKE_HOST_INSTALL_PREFIX)
+	$(CP) $(HOST_BUILD_DIR)/{bin,lib,libexec,include,share} $(CMAKE_HOST_INSTALL_PREFIX)/.
+	ln -s $(CMAKE_HOST_INSTALL_PREFIX) $(STAGING_DIR_HOST)/llvm-bpf
 	STRIP_KMOD= PATCHELF= STRIP=strip $(SCRIPT_DIR)/rstrip.sh $(STAGING_DIR_HOST)/llvm-bpf
 	echo "$(PKG_VERSION)" > $(CMAKE_HOST_INSTALL_PREFIX)/.llvm-version
 endef
