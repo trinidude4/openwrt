@@ -1,0 +1,46 @@
+name: Build qosify
+
+on:
+  push:
+    branches: [ openwrt-21.02 ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Initialize environment
+      run: |
+        sudo apt update 
+        sudo apt install build-essential ccache ecj fastjar file g++ gawk \
+        gettext git java-propose-classpath libelf-dev libncurses5-dev \
+        libncursesw5-dev libssl-dev python python2.7-dev python3 unzip wget \
+        python3-distutils python3-setuptools python3-dev rsync subversion \
+        swig time xsltproc zlib1g-dev 
+      
+    - name: Update feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
+      
+    - name: Install feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds install -a
+        
+    - name: Make defconfig
+      run: cd $GITHUB_WORKSPACE && make defconfig  
+
+    - name: Compile toolchain
+      run: cd $GITHUB_WORKSPACE && make toolchain/compile
+      
+    - name: Compile linux
+      run: cd $GITHUB_WORKSPACE && make target/linux/compile
+      
+    - name: Compile qosify
+      run: cd $GITHUB_WORKSPACE && make package/qosify/compile
+
+    - name: Upload bin directory
+      uses: actions/upload-artifact@main
+      with:
+        name: qosify_bin
+        path: bin
