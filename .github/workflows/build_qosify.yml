@@ -37,10 +37,11 @@ jobs:
       run: cd $GITHUB_WORKSPACE && make target/linux/compile
       
     - name: Compile qosify
-      run: cd $GITHUB_WORKSPACE && make package/qosify/compile
+      run: cd $GITHUB_WORKSPACE && make package/qosify/compile V=s
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
       with:
         name: qosify_bin
         path: bin
+
