@@ -1,8 +1,6 @@
 name: Build qosify
 
-on:
-  push:
-    branches: [ openwrt-21.02 ]
+on: [workflow_dispatch]
 
 jobs:
   build:
