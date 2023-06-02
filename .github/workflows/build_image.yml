@@ -1,0 +1,54 @@
+name: Build image
+
+on: [workflow_dispatch]
+
+permissions: write-all
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Initialize environment
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        sudo apt update 
+        sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+        gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \
+        file wget
+    - name: Download Image-Builder
+      run: |
+        wget https://downloads.openwrt.org/releases/23.05.0-rc1/targets/mvebu/cortexa9/openwrt-imagebuilder-23.05.0-rc1-mvebu-cortexa9.Linux-x86_64.tar.xz
+        tar -J -x -f openwrt-imagebuilder-*.tar.xz
+        
+    - name: Build Image
+      run: |
+        cd $GITHUB_WORKSPACE/openwrt-imagebuilder-*/
+        make image PROFILE="linksys_wrt32x" PACKAGES="base-files busybox ca-bundle dnsmasq dropbear \
+        firewall4 fstools iwinfo kmod-btmrvl kmod-gpio-button-hotplug kmod-mwifiex-sdio kmod-mwlwifi \
+        kmod-nft-offload libc libgcc libustream-mbedtls logd mtd mwlwifi-firmware-88w8964 netifd \
+        nftables-json odhcp6c odhcpd-ipv6only opkg ppp ppp-mod-pppoe procd procd-seccomp procd-ujail \
+        uboot-envtools uci uclient-fetch urandom-seed urngd wpad-mbedtls luci block-mount \
+        ca-certificates curl kmod-fs-vfat kmod-usb-storage luci-app-adblock luci-app-advanced-reboot \
+        luci-app-commands luci-app-ddns luci-app-https-dns-proxy luci-app-minidlna luci-app-samba4 \
+        luci-app-wireguard nano procps-ng-watch qosify tcpdump-mini git git-http -nftables -wpad-basic-mbedtls"
+    - name: Upload directories
+      uses: actions/upload-artifact@main
+      with:
+        name: build_upload
+        path: |
+          openwrt-imagebuilder-*/bin/*
+
+    - name: Upload files
+      uses: maggie44/actions/packages/automatic-releases@built-packages
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: 23.05-latest
+        prerelease: false
+        title: Latest 23.05
+        files: |
+          openwrt-imagebuilder-*/bin/targets/mvebu/cortexa9/*
