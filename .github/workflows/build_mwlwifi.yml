@@ -25,9 +25,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         wget https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/mvebu/cortexa9/config.buildinfo -O .config
-        wget https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/mvebu/cortexa9/openwrt-sdk-23.05-SNAPSHOT-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64.tar.xz
-        tar -xhf openwrt-sdk-*.tar.xz
-        rsync -a openwrt-sdk-23.05-SNAPSHOT-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64/* .
+        curl https://downloads.openwrt.org/releases/23.05-SNAPSHOT/targets/mvebu/cortexa9/openwrt-sdk-23.05-SNAPSHOT-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64.tar.xz | tar xhf --strip-components 1 -
 
     - name: Update feeds
       run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
@@ -43,7 +41,7 @@ jobs:
     - name: Build Image
       run: |
         cd $GITHUB_WORKSPACE
-        make package/kernel/mwlwifi/compile V=s
+        make -j$(nproc) package/kernel/mwlwifi/compile V=s
     - name: Upload directories
       uses: actions/upload-artifact@main
       with:
