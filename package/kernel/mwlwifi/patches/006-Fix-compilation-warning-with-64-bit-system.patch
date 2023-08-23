@@ -117,11 +117,9 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/tx_ndp.c | 2 +-
  4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/debugfs.c b/debugfs.c
-index 39b09fd..42efd28 100644
 --- a/debugfs.c
 +++ b/debugfs.c
-@@ -1332,7 +1332,7 @@ done:
+@@ -1366,7 +1366,7 @@ done:
  				 priv->reg_value);
  	else
  		len += scnprintf(p + len, size - len,
@@ -130,11 +128,9 @@ index 39b09fd..42efd28 100644
  				 ret, priv->reg_type, priv->reg_offset,
  				 priv->reg_value);
  
-diff --git a/hif/fwcmd.c b/hif/fwcmd.c
-index 376b58f..582c8d2 100644
 --- a/hif/fwcmd.c
 +++ b/hif/fwcmd.c
-@@ -3604,7 +3604,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ieee80211_hw *hw,
+@@ -3599,7 +3599,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
  	core_dump->size_kb = pcmd->cmd_data.coredump.size_kb;
  	core_dump->flags = pcmd->cmd_data.coredump.flags;
  	memcpy(buff,
@@ -143,11 +139,9 @@ index 376b58f..582c8d2 100644
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump) -
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump_)),
  	       MAX_CORE_DUMP_BUFFER);
-diff --git a/hif/pcie/pcie.c b/hif/pcie/pcie.c
-index 24453b6..5b6c633 100644
 --- a/hif/pcie/pcie.c
 +++ b/hif/pcie/pcie.c
-@@ -1320,8 +1320,8 @@ static void pcie_bf_mimo_ctrl_decode(struct mwl_priv *priv,
+@@ -1310,8 +1310,8 @@ static void pcie_bf_mimo_ctrl_decode(str
  			       &fp_data->f_pos);
  		filp_close(fp_data, current->files);
  	} else {
@@ -157,12 +151,10 @@ index 24453b6..5b6c633 100644
 +			  filename, PTR_ERR(fp_data));
  	}
  
- #if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
-diff --git a/hif/pcie/tx_ndp.c b/hif/pcie/tx_ndp.c
-index 6758cde..3140a2e 100644
+ 	force_uaccess_end(oldfs);
 --- a/hif/pcie/tx_ndp.c
 +++ b/hif/pcie/tx_ndp.c
-@@ -335,7 +335,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw *hw)
+@@ -335,7 +335,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw
  
  	if (sizeof(struct pcie_tx_ctrl_ndp) >
  	    sizeof(tx_info->status.status_driver_data)) {
@@ -171,6 +163,3 @@ index 6758cde..3140a2e 100644
  			  sizeof(struct pcie_tx_ctrl_ndp),
  			  sizeof(tx_info->status.status_driver_data));
  		return -ENOMEM;
--- 
-2.39.2
-

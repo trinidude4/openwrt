@@ -24,10 +24,10 @@ jobs:
     - name: Install sdk
       run: |
         cd $GITHUB_WORKSPACE
-        wget https://downloads.openwrt.org/releases/23.05.0-rc2/targets/mvebu/cortexa9/config.buildinfo -O .config
-        wget https://downloads.openwrt.org/releases/23.05.0-rc2/targets/mvebu/cortexa9/openwrt-sdk-23.05.0-rc2-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64.tar.xz
+        wget https://downloads.openwrt.org/releases/23.05.0-rc3/targets/mvebu/cortexa9/config.buildinfo -O .config
+        wget https://downloads.openwrt.org/releases/23.05.0-rc3/targets/mvebu/cortexa9/openwrt-sdk-23.05.0-rc3-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64.tar.xz
         tar -xhf openwrt-sdk-*.tar.xz
-        rsync -a openwrt-sdk-23.05.0-rc2-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64/* .
+        rsync -a openwrt-sdk-23.05.0-rc3-mvebu-cortexa9_gcc-12.3.0_musl_eabi.Linux-x86_64/* .
         
     - name: Update feeds
       run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
