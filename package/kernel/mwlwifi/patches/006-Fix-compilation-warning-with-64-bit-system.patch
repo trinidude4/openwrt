@@ -119,7 +119,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 
 --- a/debugfs.c
 +++ b/debugfs.c
-@@ -1342,7 +1342,7 @@ done:
+@@ -1366,7 +1366,7 @@ done:
  				 priv->reg_value);
  	else
  		len += scnprintf(p + len, size - len,
@@ -130,7 +130,7 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  
 --- a/hif/fwcmd.c
 +++ b/hif/fwcmd.c
-@@ -3623,7 +3623,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
+@@ -3599,7 +3599,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
  	core_dump->size_kb = pcmd->cmd_data.coredump.size_kb;
  	core_dump->flags = pcmd->cmd_data.coredump.flags;
  	memcpy(buff,
@@ -139,20 +139,9 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump) -
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump_)),
  	       MAX_CORE_DUMP_BUFFER);
---- a/hif/pcie/8964/tx_ndp.c
-+++ b/hif/pcie/8964/tx_ndp.c
-@@ -336,7 +336,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw
- 
- 	if (sizeof(struct pcie_tx_ctrl_ndp) >
- 	    sizeof(tx_info->driver_data)) {
--		wiphy_err(hw->wiphy, "driver data is not enough: %d (%d)\n",
-+		wiphy_err(hw->wiphy, "driver data is not enough: %zu (%zu)\n",
- 			  sizeof(struct pcie_tx_ctrl_ndp),
- 			  sizeof(tx_info->driver_data));
- 		return -ENOMEM;
 --- a/hif/pcie/pcie.c
 +++ b/hif/pcie/pcie.c
-@@ -1464,8 +1464,8 @@ static void pcie_bf_mimo_ctrl_decode(str
+@@ -1310,8 +1310,8 @@ static void pcie_bf_mimo_ctrl_decode(str
  			       &fp_data->f_pos);
  		filp_close(fp_data, current->files);
  	} else {
@@ -162,4 +151,36 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 +			  filename, PTR_ERR(fp_data));
  	}
  
- #if LINUX_VERSION_CODE < KERNEL_VERSION(5,10,0)
+ 	force_uaccess_end(oldfs);
+--- a/hif/pcie/tx_ndp.c
++++ b/hif/pcie/tx_ndp.c
+@@ -335,7 +335,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw
+ 
+ 	if (sizeof(struct pcie_tx_ctrl_ndp) >
+ 	    sizeof(tx_info->status.status_driver_data)) {
+-		wiphy_err(hw->wiphy, "driver data is not enough: %d (%d)\n",
++		wiphy_err(hw->wiphy, "driver data is not enough: %zu (%zu)\n",
+ 			  sizeof(struct pcie_tx_ctrl_ndp),
+ 			  sizeof(tx_info->status.status_driver_data));
+ 		return -ENOMEM;
+-- 
+2.39.2
+
+--- a/hif/pcie/rx_ndp.c
++++ b/hif/pcie/rx_ndp.c
+@@ -554,12 +554,14 @@ void pcie_rx_recv_ndp(unsigned long data)
+			dev_kfree_skb_any(psk_buff);
+			break;
+		case RXRING_CASE_SLOW_BAD_MIC:
+-			bad_mic = true;
+		case RXRING_CASE_SLOW_NOQUEUE:
+		case RXRING_CASE_SLOW_NORUN:
+		case RXRING_CASE_SLOW_MGMT:
+		case RXRING_CASE_SLOW_MCAST:
+		case RXRING_CASE_SLOW_PROMISC:
++			if (RXRING_CASE_SLOW_BAD_MIC == ctrl_case)
++				bad_mic = true;
++
+			rx_info = (struct rx_info *)psk_buff->data;
+			dma_data = (struct pcie_dma_data *)&rx_info->hdr[0];
+			pktlen = le16_to_cpu(dma_data->fwlen);
