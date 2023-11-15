@@ -1,0 +1,86 @@
+name: Build sdk
+
+on: [workflow_dispatch]
+
+permissions: write-all
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Initialize environment
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        sudo apt update 
+        sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+        gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev \
+        file wget
+      
+    - name: Update feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
+      
+    - name: Install feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds install -a
+
+    - name: Install toolchain
+      run: |
+        cd $GITHUB_WORKSPACE
+        wget https://github.com/trinidude4/openwrt/releases/download/toolchain-latest/toolchain.tar.xz
+        tar -xhf toolchain.tar.xz
+        ./scripts/ext-toolchain.sh \
+            --toolchain staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi \
+            --config mvebu/cortexa9
+        ./scripts/ext-tools.sh --refresh
+    - name: Make defconfig
+      run: |
+        cd $GITHUB_WORKSPACE 
+        wget https://downloads.openwrt.org/snapshots/targets/mvebu/cortexa9/config.buildinfo -O .config
+        echo "CONFIG_BUILD_NLS=y" >> .config
+        echo "CONFIG_EXTERNAL_TOOLCHAIN=y" >> .config
+        echo "CONFIG_EXTERNAL_TOOLCHAIN_LIBC_USE_MUSL=y" >> .config
+        echo "CONFIG_LIBC_FILE_SPEC=\"./arm-openwrt-linux-muslgnueabi/lib/ld-musl-armhf.so.1 ./arm-openwrt-linux-muslgnueabi/lib/libc.so\"" >> .config
+        echo "CONFIG_LIBC_ROOT_DIR=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_LIBGCC_FILE_SPEC=\"./arm-openwrt-linux-muslgnueabi/lib/libgcc_s.so ./arm-openwrt-linux-muslgnueabi/lib/libgcc_s.so.1\"" >> .config
+        echo "CONFIG_LIBGCC_ROOT_DIR=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_LIBPTHREAD_FILE_SPEC=\"./lib/libpthread{-*.so,.so.*}\"" >> .config
+        echo "CONFIG_LIBPTHREAD_ROOT_DIR=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_LIBRT_FILE_SPEC=\"./lib/librt{-*.so,.so.*}\"" >> .config
+        echo "CONFIG_LIBRT_ROOT_DIR=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_LIBSTDCPP_FILE_SPEC=\"./arm-openwrt-linux-muslgnueabi/lib/libstdc++.so ./arm-openwrt-linux-muslgnueabi/lib/libstdc++.so.6 ./arm-openwrt-linux-muslgnueabi/lib/libstdc++.so.6.0.30 ./arm-openwrt-linux-muslgnueabi/lib/libstdc++.so.6.0.30-gdb.py\"" >> .config
+        echo "CONFIG_LIBSTDCPP_ROOT_DIR=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_PACKAGE_libstdcpp=y" >> .config
+        echo "CONFIG_TARGET_NAME=\"arm-openwrt-linux-muslgnueabi\"" >> .config
+        echo "CONFIG_TOOLCHAIN_BIN_PATH=\"./usr/bin ./bin\"" >> .config
+        echo "CONFIG_TOOLCHAIN_INC_PATH=\"./usr/include ./include/fortify ./include\"" >> .config
+        echo "CONFIG_TOOLCHAIN_LIBC=\"musl\"" >> .config
+        echo "CONFIG_TOOLCHAIN_LIB_PATH=\"./usr/lib ./lib\"" >> .config
+        echo "CONFIG_TOOLCHAIN_PREFIX=\"arm-openwrt-linux-muslgnueabi-\"" >> .config
+        echo "CONFIG_TOOLCHAIN_ROOT=\"/home/runner/work/openwrt/openwrt/staging_dir/toolchain-arm_cortex-a9+vfpv3-d16_gcc-12.2.0_musl_eabi\"" >> .config
+        echo "CONFIG_USE_EXTERNAL_LIBC=y" >> .config
+        make defconfig
+        
+    - name: Compile linux
+      run: |
+        cd $GITHUB_WORKSPACE
+        make -j$(nproc) target/linux/compile
+        tar -cJf sdk.tar.xz build_dir staging_dir
+    - name: Upload directories
+      uses: actions/upload-artifact@main
+      with:
+        name: build_upload
+        path: |
+          sdk.tar.xz
+    - name: Upload files
+      uses: maggie44/actions/packages/automatic-releases@built-packages
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: sdk-latest
+        prerelease: false
+        title: Latest sdk
+        files: |
+          sdk.tar.xz
