@@ -5,7 +5,7 @@ on: [workflow_dispatch]
 permissions: write-all
 
 env:
-  BUILD_TARGET: 23.05-SNAPSHOT
+  BUILD_TARGET: 23.05.3
 
 jobs:
   build:
