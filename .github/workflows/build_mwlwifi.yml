@@ -60,9 +60,9 @@ jobs:
       uses: maggie44/actions/packages/automatic-releases@built-packages
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: mwlwifi-${{ env.BUILD_TARGET }}
+        automatic_release_tag: mwlwifi-jbsky-${{ env.BUILD_TARGET }}
         prerelease: false
-        title: Latest ${{ env.BUILD_TARGET }} mwlwifi
+        title: jbsky ${{ env.BUILD_TARGET }} mwlwifi
         files: |
           bin/targets/mvebu/cortexa9/packages/kmod-mwlwifi_*.ipk
           bin/targets/mvebu/cortexa9/packages/mwlwifi-firmware-*.ipk
