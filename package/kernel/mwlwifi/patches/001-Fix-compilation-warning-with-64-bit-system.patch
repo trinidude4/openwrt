@@ -117,9 +117,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/tx_ndp.c | 2 +-
  4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/debugfs.c
-+++ b/debugfs.c
-@@ -1342,7 +1342,7 @@ done:
+Index: mwlwifi-2024-09-10-a916e193/debugfs.c
+===================================================================
+--- mwlwifi-2024-09-10-a916e193.orig/debugfs.c
++++ mwlwifi-2024-09-10-a916e193/debugfs.c
+@@ -1394,7 +1394,7 @@ done:
  				 priv->reg_value);
  	else
  		len += scnprintf(p + len, size - len,
@@ -128,9 +130,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  				 ret, priv->reg_type, priv->reg_offset,
  				 priv->reg_value);
  
---- a/hif/fwcmd.c
-+++ b/hif/fwcmd.c
-@@ -3623,7 +3623,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
+Index: mwlwifi-2024-09-10-a916e193/hif/fwcmd.c
+===================================================================
+--- mwlwifi-2024-09-10-a916e193.orig/hif/fwcmd.c
++++ mwlwifi-2024-09-10-a916e193/hif/fwcmd.c
+@@ -3625,7 +3625,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
  	core_dump->size_kb = pcmd->cmd_data.coredump.size_kb;
  	core_dump->flags = pcmd->cmd_data.coredump.flags;
  	memcpy(buff,
@@ -139,8 +143,10 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump) -
  	       sizeof(struct hostcmd_cmd_get_fw_core_dump_)),
  	       MAX_CORE_DUMP_BUFFER);
---- a/hif/pcie/8964/tx_ndp.c
-+++ b/hif/pcie/8964/tx_ndp.c
+Index: mwlwifi-2024-09-10-a916e193/hif/pcie/8964/tx_ndp.c
+===================================================================
+--- mwlwifi-2024-09-10-a916e193.orig/hif/pcie/8964/tx_ndp.c
++++ mwlwifi-2024-09-10-a916e193/hif/pcie/8964/tx_ndp.c
 @@ -336,7 +336,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw
  
  	if (sizeof(struct pcie_tx_ctrl_ndp) >
@@ -150,9 +156,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  			  sizeof(struct pcie_tx_ctrl_ndp),
  			  sizeof(tx_info->driver_data));
  		return -ENOMEM;
---- a/hif/pcie/pcie.c
-+++ b/hif/pcie/pcie.c
-@@ -1464,8 +1464,8 @@ static void pcie_bf_mimo_ctrl_decode(str
+Index: mwlwifi-2024-09-10-a916e193/hif/pcie/pcie.c
+===================================================================
+--- mwlwifi-2024-09-10-a916e193.orig/hif/pcie/pcie.c
++++ mwlwifi-2024-09-10-a916e193/hif/pcie/pcie.c
+@@ -1449,8 +1449,8 @@ static void pcie_bf_mimo_ctrl_decode(str
  			       &fp_data->f_pos);
  		filp_close(fp_data, current->files);
  	} else {
