@@ -41,6 +41,7 @@ jobs:
     - name: Make defconfig
       run: |
         cd $GITHUB_WORKSPACE
+        rsync -a feeds/base/package/* feeds/base/.
         make defconfig
         
     - name: Build Image
