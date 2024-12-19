@@ -11,8 +11,10 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  debugfs.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/debugfs.c
-+++ b/debugfs.c
+Index: mwlwifi-next/debugfs.c
+===================================================================
+--- mwlwifi-next.orig/debugfs.c
++++ mwlwifi-next/debugfs.c
 @@ -364,10 +364,10 @@ static ssize_t mwl_debugfs_info_read(str
  			 "-----------------------=>  address| address|qlen|fw_desc_cnt\n");
  		spin_lock_irqsave(&pcie_priv->tx_desc_lock, flags);
