@@ -17,9 +17,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/pcie.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/hif/pcie/pcie.c
-+++ b/hif/pcie/pcie.c
-@@ -1466,8 +1466,8 @@ static void pcie_bf_mimo_ctrl_decode(str
+Index: mwlwifi-next/hif/pcie/pcie.c
+===================================================================
+--- mwlwifi-next.orig/hif/pcie/pcie.c
++++ mwlwifi-next/hif/pcie/pcie.c
+@@ -1449,8 +1449,8 @@ static void pcie_bf_mimo_ctrl_decode(str
  			       &fp_data->f_pos);
  		filp_close(fp_data, current->files);
  	} else {
