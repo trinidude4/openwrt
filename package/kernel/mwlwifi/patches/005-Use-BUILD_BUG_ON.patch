@@ -12,8 +12,10 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/8964/tx_ndp.c | 9 ++-------
  1 file changed, 2 insertions(+), 7 deletions(-)
 
---- a/hif/pcie/8964/tx_ndp.c
-+++ b/hif/pcie/8964/tx_ndp.c
+Index: mwlwifi-next/hif/pcie/8964/tx_ndp.c
+===================================================================
+--- mwlwifi-next.orig/hif/pcie/8964/tx_ndp.c
++++ mwlwifi-next/hif/pcie/8964/tx_ndp.c
 @@ -334,13 +334,8 @@ int pcie_tx_init_ndp(struct ieee80211_hw
  	struct ieee80211_tx_info *tx_info = IEEE80211_SKB_CB(&skb);
  	int rc;
