@@ -12,9 +12,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/8964/tx_ndp.c | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/debugfs.c
-+++ b/debugfs.c
-@@ -1342,7 +1342,7 @@ done:
+Index: mwlwifi-next/debugfs.c
+===================================================================
+--- mwlwifi-next.orig/debugfs.c
++++ mwlwifi-next/debugfs.c
+@@ -1394,7 +1394,7 @@ done:
  				 priv->reg_value);
  	else
  		len += scnprintf(p + len, size - len,
@@ -23,8 +25,10 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  				 ret, priv->reg_type, priv->reg_offset,
  				 priv->reg_value);
  
---- a/hif/pcie/8964/tx_ndp.c
-+++ b/hif/pcie/8964/tx_ndp.c
+Index: mwlwifi-next/hif/pcie/8964/tx_ndp.c
+===================================================================
+--- mwlwifi-next.orig/hif/pcie/8964/tx_ndp.c
++++ mwlwifi-next/hif/pcie/8964/tx_ndp.c
 @@ -336,7 +336,7 @@ int pcie_tx_init_ndp(struct ieee80211_hw
  
  	if (sizeof(struct pcie_tx_ctrl_ndp) >
