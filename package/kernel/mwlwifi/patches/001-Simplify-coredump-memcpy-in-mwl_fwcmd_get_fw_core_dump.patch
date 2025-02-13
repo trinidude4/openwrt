@@ -18,11 +18,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/fwcmd.c | 6 +-----
  1 file changed, 1 insertion(+), 5 deletions(-)
 
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/fwcmd.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/fwcmd.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
-@@ -3652,11 +3652,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/fwcmd.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/fwcmd.c
+@@ -3708,11 +3708,7 @@ int mwl_fwcmd_get_fw_core_dump(struct ie
  	core_dump->context = pcmd->cmd_data.coredump.context;
  	core_dump->size_kb = pcmd->cmd_data.coredump.size_kb;
  	core_dump->flags = pcmd->cmd_data.coredump.flags;

@@ -1,8 +1,8 @@
-Index: mwlwifi-2025.02.11~b4eac4ae/core.c
+Index: mwlwifi-2025.02.11~ca0f61cb/core.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/core.c
-+++ mwlwifi-2025.02.11~b4eac4ae/core.c
-@@ -732,8 +732,8 @@ static void mwl_chnl_switch_event(struct
+--- mwlwifi-2025.02.11~ca0f61cb.orig/core.c
++++ mwlwifi-2025.02.11~ca0f61cb/core.c
+@@ -735,8 +735,8 @@ static void mwl_chnl_switch_event(struct
  		vif = container_of((void *)mwl_vif, struct ieee80211_vif,
  				   drv_priv);
  
@@ -13,10 +13,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/core.c
  	}
  	spin_unlock_bh(&priv->vif_lock);
  
-Index: mwlwifi-2025.02.11~b4eac4ae/debugfs.c
+Index: mwlwifi-2025.02.11~ca0f61cb/debugfs.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/debugfs.c
-+++ mwlwifi-2025.02.11~b4eac4ae/debugfs.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/debugfs.c
++++ mwlwifi-2025.02.11~ca0f61cb/debugfs.c
 @@ -550,9 +550,9 @@ static ssize_t mwl_debugfs_vif_read(stru
  		switch (vif->type) {
  		case NL80211_IFTYPE_AP:
@@ -81,11 +81,11 @@ Index: mwlwifi-2025.02.11~b4eac4ae/debugfs.c
  
  	return count;
  }
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/fwcmd.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/fwcmd.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
-@@ -637,11 +637,15 @@ einval:
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/fwcmd.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/fwcmd.c
+@@ -693,11 +693,15 @@ einval:
  }
  
  static int mwl_fwcmd_set_ap_beacon(struct mwl_priv *priv,
@@ -103,7 +103,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  
  	/* wmm structure of start command is defined less one byte,
  	 * due to following field country is not used, add byte one
-@@ -668,7 +672,7 @@ static int mwl_fwcmd_set_ap_beacon(struc
+@@ -724,7 +728,7 @@ static int mwl_fwcmd_set_ap_beacon(struc
  	pcmd->cmd_hdr.macid = mwl_vif->macid;
  
  	ether_addr_copy(pcmd->start_cmd.sta_mac_addr, mwl_vif->bssid);
@@ -112,7 +112,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  	if (priv->chip_type == MWL8997)
  		ether_addr_copy(pcmd->start_cmd.bssid, mwl_vif->bssid);
  	pcmd->start_cmd.bss_type = 1;
-@@ -678,7 +682,7 @@ static int mwl_fwcmd_set_ap_beacon(struc
+@@ -734,7 +738,7 @@ static int mwl_fwcmd_set_ap_beacon(struc
  	phy_ds_param_set = &pcmd->start_cmd.phy_param_set.ds_param_set;
  	phy_ds_param_set->elem_id = WLAN_EID_DS_PARAMS;
  	phy_ds_param_set->len = sizeof(phy_ds_param_set->current_chnl);
@@ -121,7 +121,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  
  	pcmd->start_cmd.probe_delay = cpu_to_le16(10);
  	pcmd->start_cmd.cap_info = cpu_to_le16(mwl_vif->beacon_info.cap_info);
-@@ -772,9 +776,9 @@ static int mwl_fwcmd_set_country_code(st
+@@ -828,9 +832,9 @@ static int mwl_fwcmd_set_country_code(st
  	bool enable = false;
  
  	if (b_inf->ie_country_ptr) {
@@ -133,7 +133,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  			a_band = true;
  		else
  			return -EINVAL;
-@@ -2117,7 +2121,7 @@ int mwl_fwcmd_set_beacon(struct ieee8021
+@@ -2173,7 +2177,7 @@ int mwl_fwcmd_set_beacon(struct ieee8021
  	if (mwl_fwcmd_set_wsc_ie(hw, b_inf->ie_wsc_len, b_inf->ie_wsc_ptr))
  		goto err;
  
@@ -142,7 +142,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  		goto err;
  
  	if (b_inf->cap_info & WLAN_CAPABILITY_SPECTRUM_MGMT)
-@@ -2179,38 +2183,38 @@ int mwl_fwcmd_set_new_stn_add(struct iee
+@@ -2235,38 +2239,38 @@ int mwl_fwcmd_set_new_stn_add(struct iee
  	ether_addr_copy(pcmd->mac_addr, sta->addr);
  
  	if (hw->conf.chandef.chan->band == NL80211_BAND_2GHZ)
@@ -195,7 +195,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  	}
  
  	pcmd->is_qos_sta = sta->wme;
-@@ -2266,38 +2270,38 @@ int mwl_fwcmd_set_new_stn_add_sc4(struct
+@@ -2322,38 +2326,38 @@ int mwl_fwcmd_set_new_stn_add_sc4(struct
  	ether_addr_copy(pcmd->mac_addr, sta->addr);
  
  	if (hw->conf.chandef.chan->band == NL80211_BAND_2GHZ)
@@ -248,7 +248,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  	}
  
  	pcmd->is_qos_sta = sta->wme;
-@@ -2817,9 +2821,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
+@@ -2873,9 +2877,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
  	pcmd->ba_info.create_params.flags = cpu_to_le32(ba_flags);
  	pcmd->ba_info.create_params.queue_id = stream->idx;
  	pcmd->ba_info.create_params.param_info =
@@ -260,7 +260,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  		 IEEE80211_HT_AMPDU_PARM_DENSITY);
  	if (direction == BA_FLAG_DIRECTION_UP) {
  		pcmd->ba_info.create_params.reset_seq_no = 0;
-@@ -2829,9 +2833,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
+@@ -2885,9 +2889,9 @@ int mwl_fwcmd_create_ba(struct ieee80211
  		pcmd->ba_info.create_params.current_seq = cpu_to_le16(0);
  	}
  	if (priv->chip_type == MWL8964 &&
@@ -272,10 +272,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/fwcmd.c
  			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MASK) >>
  			IEEE80211_VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_SHIFT);
  	}
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8864/tx.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8864/tx.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/pcie/8864/tx.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8864/tx.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/pcie/8864/tx.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8864/tx.c
 @@ -478,7 +478,7 @@ static void pcie_non_pfu_tx_done(struct
  			} else
  				memmove(dma_data->data - hdrlen, &dma_data->wh, hdrlen);
@@ -301,10 +301,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8864/tx.c
 -}
 \ No newline at end of file
 +}
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8964/tx_ndp.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8964/tx_ndp.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/pcie/8964/tx_ndp.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8964/tx_ndp.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/pcie/8964/tx_ndp.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8964/tx_ndp.c
 @@ -287,7 +287,7 @@ static inline int pcie_tx_skb_ndp(struct
  		skb_get(tx_skb);
  		pcie_tx_prepare_info(priv, tx_ctrl->rate, tx_info);
@@ -339,10 +339,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8964/tx_ndp.c
  		    qos != 0xFFFF) {
  			pcie_tx_count_packet(sta, tid);
  			spin_lock_bh(&priv->stream_lock);
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8997/tx.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8997/tx.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/pcie/8997/tx.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8997/tx.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/pcie/8997/tx.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/pcie/8997/tx.c
 @@ -81,7 +81,7 @@ static int pcie_txbd_ring_create(struct
  	wiphy_info(priv->hw->wiphy,
  		   "TX ring: - base: %p, pbase: 0x%x, len: %d\n",
@@ -377,10 +377,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/8997/tx.c
 -}
 \ No newline at end of file
 +}
-Index: mwlwifi-2025.02.11~b4eac4ae/mac80211.c
+Index: mwlwifi-2025.02.11~ca0f61cb/mac80211.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/mac80211.c
-+++ mwlwifi-2025.02.11~b4eac4ae/mac80211.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/mac80211.c
++++ mwlwifi-2025.02.11~ca0f61cb/mac80211.c
 @@ -159,7 +159,7 @@ fwcmd_fail:
  	return rc;
  }
@@ -460,7 +460,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/mac80211.c
  				const struct ieee80211_tx_queue_params *params)
  {
  	struct mwl_priv *priv = hw->priv;
-@@ -979,4 +979,9 @@ const struct ieee80211_ops mwl_mac80211_
+@@ -984,4 +984,9 @@ const struct ieee80211_ops mwl_mac80211_
  	.pre_channel_switch = mwl_mac80211_chnl_switch,
  	.sw_scan_start      = mwl_mac80211_sw_scan_start,
  	.sw_scan_complete   = mwl_mac80211_sw_scan_complete,
@@ -470,10 +470,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/mac80211.c
 +	.change_chanctx     = ieee80211_emulate_change_chanctx,
 +	.switch_vif_chanctx = ieee80211_emulate_switch_vif_chanctx,
  };
-Index: mwlwifi-2025.02.11~b4eac4ae/utils.c
+Index: mwlwifi-2025.02.11~ca0f61cb/utils.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/utils.c
-+++ mwlwifi-2025.02.11~b4eac4ae/utils.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/utils.c
++++ mwlwifi-2025.02.11~ca0f61cb/utils.c
 @@ -173,9 +173,9 @@ u32 utils_get_init_tx_rate(struct mwl_pr
  	u32 tx_rate;
  	u16 format, nss, bw, rate_mcs;
@@ -516,10 +516,10 @@ Index: mwlwifi-2025.02.11~b4eac4ae/utils.c
  
  	switch (format) {
  	case TX_RATE_FORMAT_LEGACY:
-Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/pcie.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/pcie/pcie.c
 ===================================================================
---- mwlwifi-2025.02.11~b4eac4ae.orig/hif/pcie/pcie.c
-+++ mwlwifi-2025.02.11~b4eac4ae/hif/pcie/pcie.c
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/pcie/pcie.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/pcie/pcie.c
 @@ -533,7 +533,7 @@ static irqreturn_t pcie_isr_8864(struct
  
  		if (int_status & MACREG_A2HRIC_BIT_RADAR_DETECT) {
@@ -538,7 +538,7 @@ Index: mwlwifi-2025.02.11~b4eac4ae/hif/pcie/pcie.c
  		}
  
  		if (int_status & MACREG_A2HRIC_BIT_CHAN_SWITCH)
-@@ -1053,7 +1053,7 @@ static irqreturn_t pcie_isr_ndp(struct i
+@@ -1055,7 +1055,7 @@ static irqreturn_t pcie_isr_ndp(struct i
  
  		if (int_status & MACREG_A2HRIC_NEWDP_DFS) {
  			wiphy_info(hw->wiphy, "radar detected by firmware\n");

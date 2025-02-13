@@ -17,11 +17,11 @@ Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
  hif/pcie/pcie.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Index: mwlwifi-next/hif/pcie/pcie.c
+Index: mwlwifi-2025.02.11~ca0f61cb/hif/pcie/pcie.c
 ===================================================================
---- mwlwifi-next.orig/hif/pcie/pcie.c
-+++ mwlwifi-next/hif/pcie/pcie.c
-@@ -1449,8 +1449,8 @@ static void pcie_bf_mimo_ctrl_decode(str
+--- mwlwifi-2025.02.11~ca0f61cb.orig/hif/pcie/pcie.c
++++ mwlwifi-2025.02.11~ca0f61cb/hif/pcie/pcie.c
+@@ -1451,8 +1451,8 @@ static void pcie_bf_mimo_ctrl_decode(str
  			       &fp_data->f_pos);
  		filp_close(fp_data, current->files);
  	} else {
