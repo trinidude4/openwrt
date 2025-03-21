@@ -1,0 +1,68 @@
+name: Build EA7300v2
+
+on: [workflow_dispatch]
+
+permissions: write-all
+
+env:
+  BUILD_TARGET: 24.10.0
+  GCCVER: 13.3.0
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@main
+    
+    - name: Initialize environment
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        sudo apt update 
+        sudo apt install build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
+        gettext git libncurses5-dev libssl-dev python3-setuptools rsync unzip zlib1g-dev \
+        file wget
+
+    - name: Install toolchain
+      run: |
+        cd $GITHUB_WORKSPACE
+        wget https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/config.buildinfo -O .config
+        echo "CONFIG_TARGET_ramips_mt7621_DEVICE_linksys_ea7300-v2=y" >> .config
+        wget https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/openwrt-toolchain-ramips-mt7621_gcc-${{ env.GCCVER }}_musl.Linux-x86_64.tar.zst
+        tar --zstd -xf openwrt-toolchain-*.tar.zst
+        rsync -a openwrt-toolchain-ramips-mt7621_gcc-${{ env.GCCVER }}_musl.Linux-x86_64/* .
+        ./scripts/ext-toolchain.sh --toolchain toolchain-mipsel_24kc_gcc-${{ env.GCCVER }}_musl --overwrite-config --config ramips/mt7621
+        
+    - name: Update feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
+      
+    - name: Install feeds
+      run: cd $GITHUB_WORKSPACE && ./scripts/feeds install -a
+
+    - name: Make defconfig
+      run: |
+        cd $GITHUB_WORKSPACE
+        make defconfig
+        
+    - name: Build Image
+      run: |
+        cd $GITHUB_WORKSPACE
+        make -j$(nproc) V=s
+    - name: Upload directories
+      uses: actions/upload-artifact@main
+      with:
+        name: build_upload
+        path: |
+          bin
+
+    - name: Upload files
+      uses: maggie44/actions/packages/automatic-releases@built-packages
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: EA7300v2-SNAPSHOT
+        prerelease: false
+        title: EA7300v2 SNAPSHOT
+        files: |
+          bin/targets/ramips/mt7621/*
