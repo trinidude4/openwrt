@@ -7,6 +7,7 @@ permissions: write-all
 env:
   BUILD_TARGET: 24.10.2
   GCCVER: 13.3.0
+  LLVMBPFVER: 18.1.7
 
 jobs:
   build:
@@ -35,6 +36,9 @@ jobs:
         tar --zstd -xf openwrt-toolchain-*.tar.zst
         rsync -a openwrt-toolchain-${{ env.BUILD_TARGET }}-ramips-mt7621_gcc-${{ env.GCCVER }}_musl.Linux-x86_64/* .
         ./scripts/ext-toolchain.sh --toolchain toolchain-mipsel_24kc_gcc-${{ env.GCCVER }}_musl --overwrite-config --config ramips/mt7621
+        wget https://downloads.openwrt.org/snapshots/targets/ramips/mt7621/llvm-bpf-${{ env.LLVMBPFVER }}.Linux-x86_64.tar.zst
+        tar --zstd -xf llvm*.tar.zst
+        echo "CONFIG_USE_LLVM_PREBUILT=y" >> .config
         
     - name: Update feeds
       run: cd $GITHUB_WORKSPACE && ./scripts/feeds update -a
